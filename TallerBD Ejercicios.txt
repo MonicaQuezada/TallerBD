@@ -1,0 +1,82 @@
+CREAR BASE DE DATOS
+create database taller;
+use taller;
+
+CREAR TABLAS
+create table cliente(
+cliente_id char(10) not null primary key,
+nombre varchar(25) not null,
+apellido varchar(25) not null,
+direccion varchar(30) not null,
+provincia varchar(20) not null,
+canton varchar(20) not null,
+telefono char(10) not null,
+num_casa integer not null
+);
+
+create table producto(
+producto_id integer not null primary key,
+nombre varchar(25) not null,
+costo decimal(5,2) not null
+);
+
+create table orden(
+orden_id integer not null auto_increment primary key,
+client_id char(10) not null,
+product_id integer not null,
+cantidad integer not null,
+fecha date not null,
+constraint fk_cliente_id foreign key(client_id) references cliente(cliente_id),
+constraint fk_producto_id foreign key(product_id) references producto(producto_id)
+);
+
+EDITAR TABLA
+alter table producto add descripcion varchar(25);
+alter table producto modify costo integer not null;
+alter table producto change costo costo1 decimal(5,2) not null;
+alter table producto rename productos;
+alter table productos drop column descripcion;
+
+ELIMINAR TABLA
+create table ejemplo(
+id_ejemplos integer);
+
+drop table ejemplo;
+
+INSERTAR DATOS
+Cliente
+insert into cliente values ('0106045868','Ronny','Tene','San Sebastian','Azuay','Cuenca','099999999',15);
+insert into cliente values ('0106045869','Daniel','Gomez','Ricaurte','Azuay','Cuenca','099999999',20);
+insert into cliente values ('0106045866','Juan','Perez','Los Frailes','Madrid','España','0111111111',10);
+
+Producto
+insert into productos values (1,'Laptop hp',400);
+insert into productos values (2,'Tablet lenovo',250);
+insert into productos values (3,'Celular Samsung',300);
+
+Orden
+insert into orden values(0,'0106045867',1,10,'2020-09-19');
+insert into orden values(0,'0106045868',3,5,'2020-09-18');
+insert into orden values(0,'0106045866',2,8,'2020-09-19');
+
+MODIFICAR DATOS
+update orden set fecha='2020-09-20' where client_id='0106045867';
+update cliente set telefono='0111111111' where cliente_id='0106045867';
+update productos set costo1='500' where producto_id=1;
+
+ELIMINAR DATOS
+delete from cliente where cliente_id='0106045867';
+delete from orden where client_id='0106045867';
+
+SELECT 
+select * from orden;
+select nombre, apellido from cliente;
+select * from cliente where cliente_id='0106045868';
+
+select * from productos order by costo1 desc;
+select client_id , count('orden_id') from orden group by client_id; 
+select client_id from orden where product_id=2 or product_id=3 group by client_id;
+select sum(costo1) as total from productos;
+
+2 tablas
+select product_id,costo1, count('orden_id') from productos,orden where productos.producto_id=orden.product_id group by product_id;
